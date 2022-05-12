@@ -5,6 +5,17 @@
 class Product:
     """
     Creates a object of a product.
+
+    Input:
+    code: String - Code for product - Primary key.
+    name: String - Name/description of product.
+    supplier: String - Name of supplier.
+    cost: Float - Cost of product (ex-VAT).
+    rrp: Float - Retail price of product (ex-VAT).
+    pcsl: Int - Current stock level of product.
+    prsl: Int - Required stock level of product. 
+
+
     
     """
 
