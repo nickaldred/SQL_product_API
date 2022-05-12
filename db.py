@@ -1,4 +1,5 @@
 from sqlite3 import Cursor
+from unittest import result
 import mysql.connector
 from mysql.connector import connection
 
@@ -11,9 +12,9 @@ class Db:
     provides all the functions to make use of that database.
 
     Input:
-    host: Address of host server = String
-    user: Username to access database = String
-    password: Password to access database = String 
+    host: Address of host server = String.
+    user: Username to access database = String.
+    password: Password to access database = String .
 
     """
     
@@ -85,9 +86,7 @@ class Db:
         try:
             cursor.execute(f"""INSERT INTO products (productCode, productName, 
             productSupplier, productCost, productRRP, PCSL, PRSL) VALUES 
-            ('{product.code}','{product.name}','{product.supplier}','
-            {product.cost}','{product.rrp}','{product.pcsl}','
-            {str(product.prsl)}')""")
+            ('{product.code}','{product.name}','{product.supplier}','{product.cost}','{product.rrp}','{product.pcsl}','{product.prsl}')""")
             return True
 
         except:
@@ -126,7 +125,7 @@ class Db:
 
     def delete_product(self, cursor, code) -> bool:
         """
-        A method that deletes an prodcut from the table.
+        A method that deletes a product from the table.
         
         Input:
         cursor: Cursor object to navigate database.
@@ -134,11 +133,11 @@ class Db:
 
         """
         try:
-            cursor.execute(f"DELETE FROM products WHERE productCode = {code}")
+            cursor.execute(f"DELETE FROM products WHERE productCode= '{code}'")
             return True
-
         except:
             return False
+
 
     def find_product(self, cursor, code) -> list:
         """
@@ -153,6 +152,40 @@ class Db:
         cursor.execute(f"SELECT * From products WHERE productCode= '{code}'")
         result = cursor.fetchall()
         return(result)
+
+
+    def find_suppliers_products(self, cursor, supplier) -> list:
+        """
+        Finds and returns all the products from a particular supplier.
+
+        Input:
+        cursor: Cursor object to navigate database.
+        suppler: Name of supplier - String
+
+        """
+
+        cursor.execute(f"""SELECT * From products WHERE 
+            productSupplier= '{supplier}'""")
+        result = cursor.fetchall()
+        return(result)
+
+
+    def find_all_products(self, cursor) -> list:
+        """
+        Finds and returns all the products from the database.
+
+        Input:
+        cursor: Cursor object to navigate database.
+
+        """
+
+        cursor.execute(f"SELECT * From products")
+        result = cursor.fetchall()
+        return(result)
+
+    
+
+    
 
     
 
