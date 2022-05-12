@@ -20,9 +20,9 @@ class Product:
     """
 
     def __init__(self, code, name, supplier, cost, rrp, pcsl, prsl) -> None:
-        self.code = code
-        self.name = name
-        self.supplier = supplier
+        self.code = code.upper()
+        self.name = name.upper()
+        self.supplier = supplier.upper()
         self.cost = cost
         self.rrp = rrp
         self.pcsl = pcsl
