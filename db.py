@@ -70,7 +70,7 @@ class Db:
             return True
         
         except:
-            return False
+            raise RuntimeError("Failure to create database")
 
 
 
@@ -90,7 +90,7 @@ class Db:
             return True
 
         except:
-            return False
+            raise RuntimeError("Failed to add data to database")
 
 
     def commit_data(self, conn) -> bool:
@@ -105,7 +105,7 @@ class Db:
             return True
 
         except:
-            return False
+            raise RuntimeError("Failed to commit data to database")
 
     def delete_all_rows(self, cursor) -> bool:
         """
@@ -121,7 +121,7 @@ class Db:
             return True
 
         except:
-            return False
+            raise RuntimeError("Failed to delete all rows")
 
     def delete_product(self, cursor, code) -> bool:
         """
@@ -136,7 +136,7 @@ class Db:
             cursor.execute(f"DELETE FROM products WHERE productCode= '{code}'")
             return True
         except:
-            return False
+            raise RuntimeError("Failed to delete product")
 
 
     def find_product(self, cursor, code) -> list:
@@ -182,6 +182,8 @@ class Db:
         cursor.execute(f"SELECT * From products")
         result = cursor.fetchall()
         return(result)
+
+
 
     
 
