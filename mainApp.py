@@ -62,6 +62,20 @@ def get_product(code):
 
     return (product_data)
 
+@app.route("/products/<supplier_name>")
+def get_supplier_products(supplier_name):
+    output = []
+    products = database.find_suppliers_products(cursor, supplier_name)
+    for product in products:
+            product_data = {'code' : product[0], 'name': product[1], 
+            'supplier' : product[2], 'cost' : product[3], 'rrp' : product[4],
+            'pcsl' : product[5], 'prsl' : product[6]}
+            output.append(product_data)
+
+    return {"products" : output}
+
+
+
 
 
 
