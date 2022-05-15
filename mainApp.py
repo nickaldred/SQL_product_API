@@ -1,12 +1,17 @@
-from itertools import product
-from os import O_TEMPORARY
-from flask import Flask, jsonify, request
+
+from flask import Flask, jsonify, request, make_response
 from db import Db
 from product import Product
 from DataHandler import DataHandler
 import simplejson as json
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+
+import datetime
+import jwt
+from dotenv import load_dotenv
+import os
+from decorators import token_required
 
 
 
@@ -41,8 +46,8 @@ def index():
     API landing page.
 
     """
-    return("""Welcome to the purchasing software API. -----------
-        For list of commands please see @ documentation""")
+    return jsonify({'message' : """Welcome to the purchasing software API. -----------
+        For list of commands please see @ documentation"""})
 
 
 @app.route('/documentation')
@@ -55,6 +60,7 @@ def documentation():
 
 
 @app.route('/products')
+#@token_required
 def get_all_products() -> json:
     """
     Returns all the products in the SQL database in JSON format.
@@ -74,6 +80,7 @@ def get_all_products() -> json:
 
 
 @app.route("/product/<code>")
+#@token_required
 def get_product(code) -> json:
     """
     Returns a singular product using the product code.
@@ -98,6 +105,7 @@ def get_product(code) -> json:
 
 
 @app.route("/products/<supplier_name>")
+#@token_required
 def get_supplier_products(supplier_name) -> json:
     """
     Returns all products from a particular supplier.
@@ -122,6 +130,7 @@ def get_supplier_products(supplier_name) -> json:
 
 
 @app.route("/products", methods=["POST"])
+#@token_required
 def add_product():
     """
     Using the provided JSON data, adds a new product to the SQL 
@@ -140,10 +149,11 @@ def add_product():
 
     database.add_data(cursor, product)
     database.commit_data(conn)
-    return({"Added product" : product.code})
+    return jsonify({"Added product" : product.code})
 
 
 @app.route("/products/<code>", methods=['DELETE'])
+#@token_required
 def delete_product(code):
     """
     Using a provided product code, deletes that product from the 
@@ -155,8 +165,29 @@ def delete_product(code):
     """
 
     database.delete_product(cursor, code)
-    return("Deleted product")
+    return jsonify({'message' : 'Deleted product'})
 
+
+@app.route('/login')
+def login():
+    """
+    Creates a token after a succesful login so the API can be accessed.
+
+    Input:
+    Username - String 
+    Password - String
+    
+    """
+
+    #Request login credentials from the user.
+    auth = request.authorization
+
+    if auth and auth.password == os.environ.get("PASSWORD") and os.environ.get("USER_NAME") == auth.username:
+        #Creates a token with 120 mins to expire.
+        token = jwt.encode({'user' : auth.username, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=120)}, os.environ.get("SECRET_KEY"))
+        return jsonify({'token' : token})
+
+    return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required"'})
 
 
 
