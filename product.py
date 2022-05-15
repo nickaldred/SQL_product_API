@@ -15,8 +15,6 @@ class Product:
     pcsl: Int - Current stock level of product.
     prsl: Int - Required stock level of product. 
 
-
-    
     """
 
     def __init__(self, code, name, supplier, cost, rrp, pcsl, prsl) -> None:
