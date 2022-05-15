@@ -5,12 +5,15 @@ from db import Db
 from product import Product
 from DataHandler import DataHandler
 import simplejson as json
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 
 
 app = Flask(__name__)
 
-#Connects to the MySQL database
-database = Db(host="localhost",user="root", password="test123")
+#Connects to the Postgres database
+database = Db(host="localhost",user="postgres", password="miley723")
 conn = database.connect_db()
 cursor = database.create_cursor(conn)
 table = """CREATE TABLE IF NOT EXISTS products
@@ -19,12 +22,18 @@ table = """CREATE TABLE IF NOT EXISTS products
         productSupplier VARCHAR(50),  
         productCost DECIMAL(19,2),
         productRRP DECIMAL(19,2),
-        PCSL SMALLINT(32),
-        PRSL SMALLINT(32)
+        PCSL SMALLINT,
+        PRSL SMALLINT
         )"""
-database.create_db(cursor, "purchasing_program", table)
+database.create_db(cursor, "postgres", table)
 
 
+#Rate limiter for API
+limiter = Limiter(
+    app,
+    key_func=get_remote_address,
+    default_limits=["10000 per day", "500 per hour"]
+)
 
 @app.route('/')
 def index():

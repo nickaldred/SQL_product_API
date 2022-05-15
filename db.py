@@ -1,14 +1,11 @@
 from sqlite3 import Cursor
 from unittest import result
-import mysql.connector
-from mysql.connector import connection
-
-
+import psycopg2
 
 
 class Db:
     """ 
-    Create's a mySQL database hosted on a server and
+    Create's a PostgresQL database hosted on a server and
     provides all the functions to make use of that database.
 
     Input:
@@ -30,7 +27,7 @@ class Db:
         class and returns the connection so it can be utilised.
         """
 
-        conn = mysql.connector.connect(
+        conn = psycopg2.connect(
         host = self.host,
         user = self.user,
         password = self.password,
@@ -42,7 +39,7 @@ class Db:
 
     def create_cursor(self, conn) -> object:
         """
-        Creates and returns a cursor for the mySQL connection 
+        Creates and returns a cursor for the Postgres connection 
         that can be used to interact with the database.
 
         Input:
@@ -55,7 +52,7 @@ class Db:
 
     def create_db(self, cursor, database, table) -> bool:
         """
-        Creates a database and table using the mySQL connection.
+        Creates a database and table using the Postgres connection.
 
         Input:
         cursor: Cursor object to navigate database
@@ -64,8 +61,8 @@ class Db:
         
         """
         try:
-            cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
-            cursor.execute(f"USE {database}")
+            #cursor.execute(f"CREATE DATABASE IF NOT EXISTS {database}")
+            #cursor.execute(f"USE {database}")
             cursor.execute(table)
             return True
         
@@ -76,7 +73,7 @@ class Db:
 
     def add_data(self, cursor, product) -> bool:
         """
-        A method to add a new product to the table using the mySQL 
+        A method to add a new product to the table using the Postgres
         connection and using an Product object.  
 
         Input:
