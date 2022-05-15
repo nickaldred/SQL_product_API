@@ -1,7 +1,4 @@
 
-
-
-
 class Product:
     """
     Creates a object of a product.
