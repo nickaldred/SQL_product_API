@@ -83,7 +83,9 @@ class Db:
         try:
             cursor.execute(f"""INSERT INTO products (productCode, productName, 
             productSupplier, productCost, productRRP, PCSL, PRSL) VALUES 
-            ('{product.code}','{product.name}','{product.supplier}','{product.cost}','{product.rrp}','{product.pcsl}','{product.prsl}')""")
+            ('{product.code}','{product.name}','{product.supplier}',
+            '{product.cost}','{product.rrp}','{product.pcsl}',
+            '{product.prsl}')""")
             return True
 
         except:
