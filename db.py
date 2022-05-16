@@ -183,6 +183,30 @@ class Db:
         return(result)
 
 
+    def update_product(self, cursor, code, column, value) -> bool:
+        """
+        Finds a record and updates the required data in the database
+        using the data provided.
+
+        Inputs:
+        cursor: Cursor object to navigate database.
+        code: Code of product to be updated - String.
+        column: Column to be updated - String.
+        value: Value to update column with - Type varies depending on
+                input.
+        
+        """
+
+        try:
+            cursor.execute(f"""UPDATE products 
+                SET {column} = {value} 
+                WHERE productCode = '{code}'""")
+
+            return True
+
+        except:
+            return False
+
 
     
 
