@@ -1,5 +1,6 @@
 
 from flask import Flask, jsonify, request, make_response
+from pyparsing import col
 from db import Db
 from product import Product
 from DataHandler import DataHandler
@@ -13,7 +14,7 @@ from dotenv import load_dotenv
 import os
 from decorators import token_required
 
-
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -94,7 +95,7 @@ def get_product(code) -> json:
 
     #Error checking
     if product == []:
-        return("Error 404 - Not found")
+        return jsonify({"Message" : "Error 404 - Not found"})
 
     product_data = {'code' : product[0][0], 'name': product[0][1], 
             'supplier' : product[0][2], 'cost' : product[0][3], 
@@ -166,6 +167,30 @@ def delete_product(code):
 
     database.delete_product(cursor, code)
     return jsonify({'message' : 'Deleted product'})
+
+
+@app.route("/product/<code>", methods=['PUT'])
+def update_product(code):
+    """
+    Updates any column of the table with the provided input data.
+
+    Inputs:
+    code - String - Product to update.
+
+    column - String - column to update.
+    value - Data type varies depending on column - Value to update
+            column with.
+    
+    """
+    
+    column = request.json['column']
+    data_to_update = request.json['value']
+
+    database.update_product(cursor, code, column, data_to_update)
+    database.commit_data(conn=conn)
+
+    return(get_product(code))
+
 
 
 @app.route('/login')
