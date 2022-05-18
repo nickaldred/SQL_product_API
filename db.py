@@ -198,13 +198,15 @@ class Db:
         """
 
         try:
+            print(column)
             cursor.execute(f"""UPDATE products 
-                SET {column} = {value} 
-                WHERE productCode = '{code}'""")
+                SET {column}='{value}'
+                WHERE productCode='{code}'""")
 
             return True
 
         except:
+            
             return False
 
 
