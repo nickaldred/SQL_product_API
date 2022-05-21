@@ -106,6 +106,7 @@ class Db:
         except:
             raise RuntimeError("Failed to commit data to database")
 
+
     def delete_all_rows(self, cursor) -> bool:
         """
         A method that deletes all the products contained in the 
@@ -121,6 +122,7 @@ class Db:
 
         except:
             raise RuntimeError("Failed to delete all rows")
+
 
     def delete_product(self, cursor, code) -> bool:
         """
