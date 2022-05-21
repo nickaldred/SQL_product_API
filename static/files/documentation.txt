@@ -1,0 +1,71 @@
+Welcome to the Purchasing Product API.
+
+This API can be used to access the data from the SQL database which 
+contains all the products for the system.
+
+To use the API please enter URL followed by selected command.
+
+Commands:
+
+/login
+Asks the user for the login details of the API.
+After a successful login will return a JWT token which can be 
+used to access the other commands of the API.
+
+GET requests - 
+
+/products
+Returns JSON data regarding every product contained in the database.
+
+/product/<code>
+Returns in JSON the product data from the supplied code.
+
+/products/<supplier_name>
+Returns in JSON all the products from the supplied supplier.
+
+
+POST requests - 
+
+/products
+Using the supplied JSON data will create a store a new product in the
+SQL database.
+
+Please follow the below format:
+
+    {
+        "code": "FGFS",
+        "cost": "2.50",
+        "name": "FIRE RATED D/L CHR",
+        "pcsl": 30,
+        "prsl": 50,
+        "rrp": "7.50",
+        "supplier": "RED ARROW"
+    }
+
+
+DELETE requests - 
+
+/product/<code>
+
+Will delete the the product from the SQL database from the code 
+supplied.
+
+
+PUT requests - 
+
+/product/<code>
+
+Will update the product with the supplied JSON data.
+Columns are updated individually.
+
+Please follow the below format:
+
+    {
+        "column": "productname",
+        "value": "FIRE RATED D/L CH"
+
+    }
+
+
+
+
