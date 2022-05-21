@@ -95,7 +95,7 @@ def get_product(code) -> json:
 
     #Error checking
     if product == []:
-        return jsonify({"Message" : "Error 404 - Not found"})
+        return jsonify({"Product not found" : 404})
 
     product_data = {'code' : product[0][0], 'name': product[0][1], 
             'supplier' : product[0][2], 'cost' : product[0][3], 
@@ -126,6 +126,9 @@ def get_supplier_products(supplier_name) -> json:
             'supplier' : product[2], 'cost' : product[3], 'rrp' : product[4],
             'pcsl' : product[5], 'prsl' : product[6]}
             output.append(product_data)
+    
+    if output == []:
+        return jsonify({"Supplier not found": 404})
 
     return jsonify(output)
 
@@ -153,7 +156,7 @@ def add_product():
     return jsonify({"Added product" : product.code})
 
 
-@app.route("/products/<code>", methods=['DELETE'])
+@app.route("/product/<code>", methods=['DELETE'])
 #@token_required
 def delete_product(code):
     """
