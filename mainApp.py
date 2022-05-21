@@ -1,5 +1,5 @@
 
-from flask import Flask, jsonify, request, make_response
+from flask import Flask, jsonify, request, make_response, send_from_directory
 from pyparsing import col
 from db import Db
 from product import Product
@@ -48,7 +48,7 @@ def index():
 
     """
     return jsonify({'message' : """Welcome to the purchasing software API. -----------
-        For list of commands please see @ documentation"""})
+        For list of commands please see /documentation"""})
 
 
 @app.route('/documentation')
@@ -57,8 +57,9 @@ def documentation():
     Displays the documentation on how to use the API.
 
     """
-    return("Documentation")
-
+    workingdir = os.path.abspath(os.getcwd())
+    filepath = workingdir + '/static/files'
+    return send_from_directory(filepath, 'documentation.txt')
 
 @app.route('/products')
 #@token_required
