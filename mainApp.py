@@ -232,4 +232,4 @@ def login():
 
 
 
-app.run(debug=True)
+app.run(host="127.0.0.2", debug=True)
