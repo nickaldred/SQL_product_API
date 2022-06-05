@@ -170,6 +170,7 @@ def delete_product(code):
     """
 
     database.delete_product(cursor, code)
+    database.commit_data(conn)
     return jsonify({'message' : 'Deleted product'})
 
 
