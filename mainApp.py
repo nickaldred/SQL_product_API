@@ -1,9 +1,7 @@
 
 from flask import Flask, jsonify, request, make_response, send_from_directory
-from pyparsing import col
 from db import Db
 from product import Product
-from DataHandler import DataHandler
 import simplejson as json
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
@@ -14,32 +12,7 @@ from dotenv import load_dotenv
 import os
 from decorators import token_required
 
-load_dotenv()
-
 app = Flask(__name__)
-
-#Connects to the Postgres database
-database = Db(host="localhost",user="postgres", password="miley723")
-conn = database.connect_db()
-cursor = database.create_cursor(conn)
-table = """CREATE TABLE IF NOT EXISTS products
-        (productCode VARCHAR(32) PRIMARY KEY, 
-        productName VARCHAR(50),
-        productSupplier VARCHAR(50),  
-        productCost DECIMAL(19,2),
-        productRRP DECIMAL(19,2),
-        PCSL SMALLINT,
-        PRSL SMALLINT
-        )"""
-database.create_db(cursor, "postgres", table)
-
-
-#Rate limiter for API
-limiter = Limiter(
-    app,
-    key_func=get_remote_address,
-    default_limits=["10000 per day", "500 per hour"]
-)
 
 @app.route('/')
 def index():
@@ -47,8 +20,8 @@ def index():
     API landing page.
 
     """
-    return jsonify({'message' : """Welcome to the purchasing software API. -----------
-        For list of commands please see /documentation"""})
+    return jsonify({'message' : """Welcome to the purchasing software API. 
+        ----------- For list of commands please see /documentation"""})
 
 
 @app.route('/documentation')
@@ -60,6 +33,7 @@ def documentation():
     workingdir = os.path.abspath(os.getcwd())
     filepath = workingdir + '/static/files'
     return send_from_directory(filepath, 'documentation.txt')
+
 
 @app.route('/products')
 #@token_required
@@ -223,14 +197,32 @@ def login():
 
 
 
+if __name__ == "__main__":
+
+    load_dotenv()
+
+    #Connects to the Postgres database
+    database = Db(host="localhost",user=os.environ.get("DB_USER"), 
+        password=os.environ.get("DB_PASS"))
+    conn = database.connect_db()
+    cursor = database.create_cursor(conn)
+    table = """CREATE TABLE IF NOT EXISTS products
+            (productCode VARCHAR(32) PRIMARY KEY, 
+            productName VARCHAR(50),
+            productSupplier VARCHAR(50),  
+            productCost DECIMAL(19,2),
+            productRRP DECIMAL(19,2),
+            PCSL SMALLINT,
+            PRSL SMALLINT
+            )"""
+    database.create_db(cursor, "postgres", table)
 
 
-
-
-
-
-
-
-
-
-app.run(host="127.0.0.2", debug=True)
+    #Rate limiter for API
+    limiter = Limiter(
+        app,
+        key_func=get_remote_address,
+        default_limits=["10000 per day", "500 per hour"]
+    )
+        
+    app.run(host="127.0.0.2", debug=True)
