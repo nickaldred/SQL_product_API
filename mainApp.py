@@ -36,7 +36,7 @@ def documentation():
 
 
 @app.route('/products')
-#@token_required
+@token_required
 def get_all_products() -> json:
     """
     Returns all the products in the SQL database in JSON format.
@@ -172,8 +172,8 @@ def update_product(code):
 
 
 
-@app.route('/login')
-def login():
+@app.route('/login/<username>/<password>')
+def login(username, password):
     """
     Creates a token after a succesful login so the API can be accessed.
 
@@ -183,15 +183,18 @@ def login():
     
     """
 
-    #Request login credentials from the user.
-    auth = request.authorization
+    if (username and password == os.environ.get("PASSWORD") and 
+            os.environ.get("USER_NAME") == username):
 
-    if auth and auth.password == os.environ.get("PASSWORD") and os.environ.get("USER_NAME") == auth.username:
         #Creates a token with 120 mins to expire.
-        token = jwt.encode({'user' : auth.username, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=120)}, os.environ.get("SECRET_KEY"))
+        token = jwt.encode({'user' : username, 
+        'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=120)},
+         os.environ.get("SECRET_KEY"))
+         
         return jsonify({'token' : token})
 
-    return make_response('Could not verify!', 401, {'WWW-Authenticate' : 'Basic realm="Login Required"'})
+    return make_response('Could not verify!', 401, 
+        {'WWW-Authenticate' : 'Basic realm="Login Required"'})
 
 
 
