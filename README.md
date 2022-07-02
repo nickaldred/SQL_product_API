@@ -10,8 +10,8 @@ To use the API please enter URL followed by selected command.
 
 Commands:
 
-/login
-Asks the user for the login details of the API.
+/login/<username>/<password>
+Provide the username and login within the URL
 After a successful login will return a JWT token which can be 
 used to access the other commands of the API.
 
