@@ -66,7 +66,7 @@ class APIApp:
         self.database.create_db(self.cursor, "postgres", table)
 
 
-    def index(self):
+    def index(self) -> json:
         """
         API landing page.
 
@@ -75,7 +75,7 @@ class APIApp:
             ----------- For list of commands please see /documentation"""})
 
 
-    def documentation(self):
+    def documentation(self) -> object:
         """
         Displays the documentation on how to use the API.
 
@@ -158,7 +158,7 @@ class APIApp:
 
 
     #@token_required
-    def add_product(self):
+    def add_product(self) -> json:
         """
         Using the provided JSON data, adds a new product to the SQL 
         self.database.
@@ -180,7 +180,7 @@ class APIApp:
 
 
     #@token_required
-    def delete_product(self, code):
+    def delete_product(self, code) -> json:
         """
         Using a provided product code, deletes that product from the 
         SQL self.database.
@@ -195,7 +195,7 @@ class APIApp:
         return jsonify({'message' : 'Deleted product'})
 
 
-    def update_product(self, code):
+    def update_product(self, code) -> json:
         """
         Updates any column of the table with the provided input data.
 
@@ -218,7 +218,7 @@ class APIApp:
         return(self.get_product(code))
 
 
-    def login(self, username, password):
+    def login(self, username, password) -> json:
         """
         Creates a token after a succesful login so the API can be 
         accessed.
