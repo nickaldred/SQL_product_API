@@ -1,5 +1,3 @@
-from sqlite3 import Cursor
-from unittest import result
 import psycopg2
 
 
