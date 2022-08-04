@@ -1,15 +1,13 @@
-
+import datetime
+import os
 from flask import Flask, jsonify, request, make_response, send_from_directory
-from db import Db
-from product import Product
 import simplejson as json
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
-
-import datetime
 import jwt
 from dotenv import load_dotenv
-import os
+from db import Db
+from product import Product
 from decorators import token_required
 
 
@@ -88,7 +86,7 @@ class APIApp:
     @token_required
     def get_all_products(self) -> json:
         """
-        Returns all the products in the SQL self.database in JSON 
+        Returns all the products in the SQL self.database in JSON
         format.
 
         """
@@ -97,12 +95,12 @@ class APIApp:
         products = self.database.find_all_products(self.cursor)
 
         for product in products:
-                product_data = {'code' : product[0], 'name': product[1], 
-                'supplier' : product[2], 'cost' : product[3], 
-                'rrp' : product[4],'pcsl' : product[5], 'prsl' : product[6]}
-                output.append(product_data)
+            product_data = {'code' : product[0], 'name': product[1],
+            'supplier' : product[2], 'cost' : product[3],
+            'rrp' : product[4],'pcsl' : product[5], 'prsl' : product[6]}
+            output.append(product_data)
 
-        return (jsonify(output))
+        return jsonify(output)
 
 
     #@token_required
@@ -136,28 +134,27 @@ class APIApp:
 
         Input:
         supplier_name -> String - Supplier to be searched for.
-        
         """
         #Converts underscores to space's
         supplier_name = supplier_name.replace("_", " ")
 
         output = []
-        products = self.database.find_suppliers_products(self.cursor, 
+        products = self.database.find_suppliers_products(self.cursor,
             supplier_name)
 
         for product in products:
-                product_data = {'code' : product[0], 'name': product[1], 
-                'supplier' : product[2], 'cost' : product[3], 
-                'rrp' : product[4], 'pcsl' : product[5], 'prsl' : product[6]}
-                output.append(product_data)
-        
-        if output == []:
+            product_data = {'code' : product[0], 'name': product[1],
+            'supplier' : product[2], 'cost' : product[3],
+            'rrp' : product[4], 'pcsl' : product[5], 'prsl' : product[6]}
+            output.append(product_data)
+
+        if not output:
             return jsonify({"Supplier not found": 404})
 
         return jsonify(output)
 
 
-    #@token_required
+    @token_required
     def add_product(self) -> json:
         """
         Using the provided JSON data, adds a new product to the SQL 
@@ -165,7 +162,6 @@ class APIApp:
 
         Input:
         JSON data of new product.
-        
         """
 
         #Gathers data from request.
@@ -179,7 +175,7 @@ class APIApp:
         return jsonify({"Added product" : product.code})
 
 
-    #@token_required
+    @token_required
     def delete_product(self, code) -> json:
         """
         Using a provided product code, deletes that product from the 
@@ -205,9 +201,9 @@ class APIApp:
         column - String - column to update.
         value - Data type varies depending on column - Value to update
                 column with.
-        
+
         """
-        
+
         column = request.json['column']
         data_to_update = request.json['value']
 
@@ -215,7 +211,7 @@ class APIApp:
             column, data_to_update)
         self.database.commit_data(conn=self.conn)
 
-        return(self.get_product(code))
+        return self.get_product(code)
 
 
     def login(self, username, password) -> json:
